@@ -23,6 +23,8 @@ import VerifyOTP from "./pages/VerifyOTP";
 import ParticlesBackground from "./components/ParticlesBackground";
 import HeroSlider from "./components/HeroSlider";
 import Footer from "./components/Footer";
+import Offers from "./pages/Offers";
+import EditProduct from "./pages/EditProduct";
 export default function App() {
   const { darkMode } = useTheme();
   const lang = getLang();
@@ -85,7 +87,8 @@ export default function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/register" element={<Register />} />
-
+          <Route path="/offers" element={<Offers/>}/>
+          <Route path="/edit-product/:id" element={<EditProduct/>}/>
           <Route path="/" element={<Home />} />
           <Route
             path="/sso-callback"

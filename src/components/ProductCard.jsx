@@ -6,7 +6,7 @@ import { t } from "../i18n";
 import axiosInstance from "../api/axiosInstance";
 import { useState, useEffect } from "react";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-
+import CountdownTimer from "./CountdownTimer";
 
 // Get current language
 const getCurrentLang = () => {
@@ -156,7 +156,7 @@ export default function ProductCard({ product }) {
           boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
           transition: "transform 0.3s",
           "&:hover": { transform: "scale(1.03)" },
-          
+
           display: "flex",
           flexDirection: "column",
         }}
@@ -169,15 +169,19 @@ export default function ProductCard({ product }) {
 
         <CardContent sx={{ flexGrow: 1 }}>
 
-          
+          {product.offerExpiresAt && (
+            <CountdownTimer 
+            
+            targetDate={product.offerExpiresAt} />
+          )}
           <Typography variant="h7" fontWeight="bold" sx={{ mb: 1 }}>
-            {product?.title?.length>35 ? product?.title?.slice(0,35) + "...":product?.title}
+            {product?.title?.length > 35 ? product?.title?.slice(0, 35) + "..." : product?.title}
           </Typography>
 
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            {product?.description?.length > 180 ? product?.description?.slice(0, 180) + "..." : product?.description}  
+            {product?.description?.length > 180 ? product?.description?.slice(0, 180) + "..." : product?.description}
           </Typography>
-          
+
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
             {provinceName} {provinceName && conditionLabel ? "-" : ""} {conditionLabel}
           </Typography>
@@ -194,17 +198,18 @@ export default function ProductCard({ product }) {
             </Box>
             {product?.productId && <FavoriteToggle productId={product.productId} size="small" />}
           </Box>
+
         </CardContent>
 
         <Box sx={{ textAlign: "center", pb: 2 }}>
           <Box sx={{ display: 'flex', gap: 2, justifyContent: 'space-evenly', flexWrap: 'wrap' }}>
-           
-           
-           
-            <Button 
-            variant="outlined" 
-            color="primary" 
-            onClick={(e) => { e.stopPropagation(); handleAddToCart(); }}>
+
+
+
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={(e) => { e.stopPropagation(); handleAddToCart(); }}>
               <AddShoppingCartIcon />
             </Button>
 
@@ -212,11 +217,11 @@ export default function ProductCard({ product }) {
 
 
 
-            <Button 
-            variant="contained" 
-            color="error" 
-            onClick={(e) => { e.stopPropagation(); handleDetails(); }}>
-            {t('view_details')}
+            <Button
+              variant="contained"
+              color="error"
+              onClick={(e) => { e.stopPropagation(); handleDetails(); }}>
+              {t('view_details')}
             </Button>
             <ProductCardChatButton
               sellerId={product?.userId || product?.sellerId}
@@ -229,12 +234,12 @@ export default function ProductCard({ product }) {
 
 
 
-    
-      <Snackbar 
-      open={snackbarOpen} 
-      autoHideDuration={800} 
-      onClose={() => setSnackbarOpen(false)} 
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={800}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
         <Alert onClose={() => setSnackbarOpen(false)} severity="success" variant="filled" sx={{ width: '100%' }}>
           {t('added_to_cart') || 'تمت الإضافة إلى السلة'}
         </Alert>

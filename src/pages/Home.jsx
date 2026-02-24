@@ -29,7 +29,7 @@ export default function Home() {
     condition: "",
     priceRange: [1000, 2000000],
   });
-  
+
   const [heroSlides, setHeroSlides] = useState([]);
   const [loadingHero, setLoadingHero] = useState(true);
   const [scrollY, setScrollY] = useState(0);
@@ -431,7 +431,7 @@ export default function Home() {
         list = list.filter(p => {
           const catFilter = String(filters.category).toLowerCase();
           const pCategoryId = String(p.categoryId ?? p.categoryID ?? p.category_id ?? '').toLowerCase();
-          const pCategoryName = (p.categoryName ?? p.category ?? '').toLowerCase();
+          const pCategoryName = String(p.categoryName ?? p.category ?? '').toLowerCase();
 
           // إذا كانت الفئة رقمية
           if (isNumeric(filters.category)) {
@@ -536,12 +536,12 @@ export default function Home() {
         sx={{ mb: 6 }}
       >
 
-       
+
         <HeroSlider slides={heroSlides} loading={loadingHero} />
       </Box>
 
       <Box>
-        
+
         {/* <Filters onFilterChange={handleFilterChange} /> */}
       </Box>
 

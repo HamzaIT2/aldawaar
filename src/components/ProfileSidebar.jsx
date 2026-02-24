@@ -767,7 +767,7 @@
 
 //-----------------------------------------------------------------------------------------------------------------------
 
-import React, { useEffect, useState } from 'react';
+import React, { act, useEffect, useState } from 'react';
 import {
     Drawer, Box, Typography, Avatar, List, ListItem,
     ListItemIcon, ListItemText, Divider, IconButton, Switch, Skeleton, Badge,
@@ -777,7 +777,8 @@ import {
 } from '@mui/material';
 import {
     Store, Logout, Language, DarkMode, Close, FavoriteBorderOutlined,
-    PersonOutlined,AddCircle,Campaign
+    PersonOutlined,AddCircle,Campaign,
+    LocalOfferOutlined
 } from '@mui/icons-material';
 import { styled, alpha } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
@@ -890,6 +891,7 @@ export default function ProfileDrawer({ open, onClose }) {
     const [loading, setLoading] = useState(true);
     const [cartCount, setCartCount] = useState(0);
     const [favCount, setFavCount] = useState(0);
+    const [offerCount , setOfferCount] = useState(0);
     const { darkMode, toggleDarkMode } = useTheme();
     const currentLang = localStorage.getItem('lang') || 'ar';
     const isRTL = currentLang === 'ar';
@@ -985,6 +987,63 @@ export default function ProfileDrawer({ open, onClose }) {
         return `http://localhost:3000/${img.replace('uploads/', '')}`;
     };
 
+    // Count Offers
+
+
+    // useEffect(()=>{
+    //     const fetchOffersCount = async ()=>{
+    //         try{
+    //             const response =await axiosInstance.get('/products');
+    //             const allProducts = Array.isArray(response.data) ? response.data :(response.data.products || []);
+                
+    //             const activeOffers = allProducts.filter(p=>{
+    //                 const currerntPrice = parseFloat(p.price);
+    //                 const oldPriceRaw = parseFloat(p.oldPrice);
+    //                 if(isNaN(currerntPrice) || isNaN(oldPriceRaw)) return false;
+
+    //                 const hasDiscount = oldPriceRaw > currerntPrice;
+
+    //                 let isTimeValid = true;
+    //                 if(p.offerExpiresAt){
+    //                     isTimeValid = new Date(p.offerExpiresAt) > new Date();
+    //                 }
+    //                 return hasDiscount && isTimeValid;
+    //             });
+    //             setOfferCount(activeOffers.length);
+
+    //         } catch (err){
+    //             console.error("Failed to fetch offers count",err);
+    //         }
+    //     };
+    //     fetchOffersCount();
+    // },[])
+
+    useEffect(()=>{
+        const offerCount1 = async ()=>{
+        try{
+            const response = await axiosInstance.get('/products');
+            const allProducts = Array.isArray(response.data) ? response.data :(response.data.products || []);
+            
+            const activeOffers = allProducts.filter(p=>{
+                const currerntPrice = parseFloat(p.price);
+                const oldPriceRaw = parseFloat(p.oldPrice);
+                if(isNaN(currerntPrice) || isNaN(oldPriceRaw)) return false;
+
+                const hasDiscount = oldPriceRaw > currerntPrice;
+
+                let isTimeValid = true;
+                if(p.offerExpiresAt){
+                    isTimeValid = new Date(p.offerExpiresAt) > new Date();
+                }
+                return hasDiscount && isTimeValid;
+            });
+            setOfferCount(activeOffers.length);
+        } catch (err){
+            console.error("Failed to fetch offers count",err);
+        }
+    }
+    },[])
+
     return (
         <Drawer
             anchor={drawerAnchor}
@@ -1073,6 +1132,23 @@ export default function ProfileDrawer({ open, onClose }) {
 
                     </ListItemIcon>
                     <ListItemText primary={isRTL ? "الملف الشخصي" : "Profile"} primaryTypographyProps={{ textAlign: isRTL ? 'right' : 'left', fontWeight: 'medium' }} />
+                </ListItemButton>
+
+                <ListItemButton onClick={() => { navigate('/offers'); onClose(); }} sx={fancyItemSx}>
+                    <ListItemIcon sx={{ minWidth: 40, transition: '0.3s' }}>
+
+                        {/* <LocalOfferOutlined color='primary.main'/> */}
+                        <Badge 
+                        badgeContent={offerCount}
+                         color="error"
+                          fontSize="small"
+                          invisible={offerCount === 0}
+                          >
+                            <LocalOfferOutlined />
+                        </Badge>
+
+                    </ListItemIcon>
+                    <ListItemText primary={isRTL ? "العروض" : "Offers"} primaryTypographyProps={{ textAlign: isRTL ? 'right' : 'left', fontWeight: 'medium' }} />
                 </ListItemButton>
 
                 <ListItemButton 

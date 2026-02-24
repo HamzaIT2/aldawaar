@@ -926,15 +926,16 @@ export default function Navbar() {
               letterSpacing: '.1rem',
               color: 'inherit',
               textDecoration: 'underline',
-              textUnderlineOffset: '4px',
-              flexGrow: 0,
+              textUnderlineOffset: '5px',
+              flexGrow: 1,
+              
             }}
           >
             {t('site_name')}
           </Typography>
 
           {/* CENTER: Navigation Links */}
-          <Box sx={{ flex: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'end', alignItems: 'center', gap: 3 }}>
+          <Box sx={{ flex: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'space-evenly', alignItems: 'center', gap: 2 }}>
             <Button
               component={RouterLink} to="/"
               color="inherit"
@@ -1059,7 +1060,7 @@ export default function Navbar() {
             <Divider orientation="vertical" flexItem sx={{ bgcolor: 'rgba(255,255,255,0.3)', height: 28, alignSelf: 'center', mx: 1 }} />
 
             {/* User Dropdown */}
-            <Tooltip title={t('account_settings') || "Account settings"}>
+            {/* <Tooltip title={t('account_settings') || "Account settings"}>
               <IconButton onClick={handleOpenUserMenu} color="inherit" sx={{ p: 0 }}>
                 {token && profile ? (
                   <Avatar
@@ -1072,7 +1073,7 @@ export default function Navbar() {
                   <AccountCircleIcon fontSize="large" />
                 )}
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
             <Menu
               sx={{ mt: '45px' }}

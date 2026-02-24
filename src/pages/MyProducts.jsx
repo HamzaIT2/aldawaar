@@ -93,7 +93,7 @@
 //             }
 //           }}>{t('delete') || 'Delete'}</Button>
 
-          
+
 
 
 //         </DialogActions>
@@ -106,10 +106,10 @@
 
 
 import { useEffect, useState } from "react";
-import { 
-  Container, Typography, CircularProgress, Grid, Card, CardContent, 
-  CardActions, IconButton, Dialog, DialogTitle, DialogContent, 
-  DialogActions, Button, Tooltip 
+import {
+  Container, Typography, CircularProgress, Grid, Card, CardContent,
+  CardActions, IconButton, Dialog, DialogTitle, DialogContent,
+  DialogActions, Button, Tooltip
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -119,21 +119,32 @@ import ProductCard from "../components/ProductCard";
 import { t } from "../i18n";
 import { useNavigate } from 'react-router-dom';
 import PromoteModal from "./PromoteModal";
-
+import MakeOfferDialog from "@/components/MakeOfferDialog";
 export default function MyProducts() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  
+  const [showOfferDialog, setShowOfferDialog] = useState(false);
   // States for Delete
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [toDelete, setToDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
-
+  const [selectedProduct, setSelectedProduct] = useState(null);
   // States for Promote (VIP) 👇
-  const [promoteItem, setPromoteItem] = useState(null); 
+  const [promoteItem, setPromoteItem] = useState(null);
 
   const navigate = useNavigate();
+
+
+  const handleOpenOffer = (p) => {
+    console.log("المنتج المختار:", p); // للتأكد في الكونسول
+    setSelectedProduct(p); // ✅ نخزن هذا المنتج تحديداً
+    setShowOfferDialog(true);
+  }
+
+
+
+
 
   useEffect(() => {
     const load = async () => {
@@ -167,7 +178,7 @@ export default function MyProducts() {
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h5" sx={{ mb: 2, fontWeight: 700, textAlign: 'right' }}>{t('my_products')}</Typography>
-      
+
       <Grid container spacing={3}>
         {items.map((p) => (
           <Grid item xs={12} sm={6} md={4} key={p.productId || p.id || p._id}>
@@ -175,7 +186,7 @@ export default function MyProducts() {
               <CardContent sx={{ flexGrow: 1 }}>
                 <ProductCard product={p} />
               </CardContent>
-              
+
               {/* 👇 أزرار التحكم بالمنتج */}
               <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
                 <div>
@@ -184,7 +195,7 @@ export default function MyProducts() {
                       <EditIcon color="primary" />
                     </IconButton>
                   </Tooltip>
-                  
+
                   <Tooltip title="حذف">
                     <IconButton onClick={() => { setToDelete(p); setConfirmOpen(true); }}>
                       <DeleteIcon color="error" />
@@ -203,6 +214,22 @@ export default function MyProducts() {
                 >
                   VIP ترويج
                 </Button>
+                <Button onClick={() => handleOpenOffer(p)}>
+                  إنشاء عرض
+                </Button>
+
+                <MakeOfferDialog
+                  open={showOfferDialog}
+                  onClose={() => {
+                    setShowOfferDialog(false);
+                    setSelectedProduct(null); // 
+                  }}
+                  product={selectedProduct} // 
+                  onSuccess={() => {
+                    window.location.reload(); // 
+                    alert("!");
+                  }}
+                />
               </CardActions>
             </Card>
           </Grid>
